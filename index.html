@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ศิลาประพันธ์มหาสนุก - เกมการศึกษาภาษาไทย (ม.ปลาย)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Firebase Compatibility SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="min-h-full bg-gradient-to-br from-amber-50 via-slate-50 to-indigo-50 text-slate-800 flex flex-col justify-between selection:bg-amber-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- Background Fantasy Decorative Elements -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-40">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-amber-300 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 -right-40 w-96 h-96 bg-indigo-300 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-emerald-200 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Navbar Header (Light Mode Glassmorphism) -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-amber-200/80 shadow-sm px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-3">
+      <!-- Game Logo / Brand -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchScreen('knowledge')">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 text-amber-950 flex items-center justify-center text-xl font-black shadow-md shadow-amber-500/20">
+          💎
+        </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-black text-amber-950 tracking-wide">
+            ศิลาประพันธ์มหาสนุก
+          </h1>
+          <span class="text-[10px] text-amber-700 block font-medium">เกมการศึกษาภาษาไทย เรื่องการแต่งคำประพันธ์ (ม.ปลาย)</span>
+        </div>
+      </div>
+
+      <!-- User Stats Badge (Hearts, Score, Tablets) -->
+      <div id="navUserStats" class="hidden flex items-center gap-3">
+        <!-- User info will be rendered by app.js -->
+      </div>
+
+      <!-- Navigation Links (3 Main Menus) -->
+      <nav class="flex items-center gap-1 md:gap-2">
+        <button 
+          onclick="switchScreen('game')" 
+          class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-amber-500 text-white hover:bg-amber-600 shadow-md transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer">
+          <i class="fas fa-gamepad"></i> เล่นเกม
+        </button>
+
+        <button 
+          onclick="switchScreen('dashboard')" 
+          class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-white/80 text-gray-700 hover:bg-white border border-gray-200 shadow-sm transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer">
+          <i class="fas fa-chart-bar text-purple-600"></i> Dashboard
+        </button>
+
+        <button 
+          onclick="switchScreen('admin')" 
+          class="px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold bg-white/80 text-gray-700 hover:bg-white border border-gray-200 shadow-sm transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer">
+          <i class="fas fa-cog text-rose-600"></i> ตั้งค่าเกม
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 z-10">
+
+    <!-- 1. SCREEN: Registration (ลงทะเบียนนักเรียน) -->
+    <section id="registerScreen" class="py-8 min-h-[75vh] flex items-center justify-center">
+      <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 md:p-10 shadow-2xl border-2 border-amber-300 max-w-lg w-full text-slate-900 animate-scale-up">
+        
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-amber-500 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-lg text-amber-950">
+            📜
+          </div>
+          <h2 class="text-2xl md:text-3xl font-black text-amber-950">ลงทะเบียนนักผจญภัย</h2>
+          <p class="text-xs text-gray-500 mt-1">กรอกข้อมูลเพื่อเริ่มต้นบทเรียนและการเดินทางสะสมชิ้นส่วนศิลาประพันธ์</p>
+        </div>
+
+        <form onsubmit="handleRegistrationSubmit(event)" class="space-y-4">
+          <!-- เลขประจำตัวนักเรียน (5 หลัก) -->
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              1. เลขประจำตัวนักเรียน <span class="text-red-500">* (ตัวเลข 5 หลักเท่านั้น)</span>
+            </label>
+            <input 
+              type="text" 
+              id="regStudentId"
+              maxlength="5"
+              pattern="\d{5}"
+              placeholder="ตัวอย่าง 12345" 
+              required
+              class="w-full p-3.5 rounded-xl border-2 border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 font-mono text-center text-lg font-bold text-amber-950 transition-all outline-none"
+            />
+          </div>
+
+          <!-- คำนำหน้านาม & ชื่อ-สกุล -->
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">2. คำนำหน้า</label>
+              <select id="regPrefix" class="w-full p-3.5 rounded-xl border-2 border-gray-200 focus:border-amber-500 font-bold text-gray-800 text-sm outline-none">
+                <option value="นาย">นาย</option>
+                <option value="นางสาว">นางสาว</option>
+                <option value="เด็กชาย">เด็กชาย</option>
+                <option value="เด็กหญิง">เด็กหญิง</option>
+              </select>
+            </div>
+            <div class="col-span-2">
+              <label class="block text-xs font-bold text-gray-700 mb-1">3. ชื่อ - นามสกุล <span class="text-red-500">*</span></label>
+              <input 
+                type="text" 
+                id="regFullName" 
+                placeholder="กรอกชื่อและนามสกุล" 
+                required
+                class="w-full p-3.5 rounded-xl border-2 border-gray-200 focus:border-amber-500 font-medium text-gray-800 text-sm outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- ระดับชั้น & ห้อง -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">4. ระดับชั้น</label>
+              <select id="regGrade" class="w-full p-3.5 rounded-xl border-2 border-gray-200 focus:border-amber-500 font-bold text-gray-800 text-sm outline-none">
+                <option value="ม.4">ม.4</option>
+                <option value="ม.5">ม.5</option>
+                <option value="ม.6">ม.6</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">5. ห้อง</label>
+              <select id="regRoom" class="w-full p-3.5 rounded-xl border-2 border-gray-200 focus:border-amber-500 font-bold text-gray-800 text-sm outline-none">
+                <option value="1">ห้อง 1</option>
+                <option value="2">ห้อง 2</option>
+                <option value="3">ห้อง 3</option>
+                <option value="4">ห้อง 4</option>
+              </select>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full mt-4 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white font-extrabold p-4 rounded-xl shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2 text-base active:scale-95 cursor-pointer">
+            ลงทะเบียนเข้าสู่เกม <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. SCREEN: Knowledge Hub (แหล่งความรู้ 5 เรื่อง) -->
+    <section id="knowledgeScreen" class="hidden py-4">
+      <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-2xl border-2 border-amber-300 text-slate-900 max-w-5xl mx-auto">
+        <!-- Banner Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 pb-6 border-b border-amber-200 mb-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black text-amber-950 flex items-center gap-2">
+              <i class="fas fa-book-reader text-amber-600"></i> แหล่งเรียนรู้เรื่องการแต่งคำประพันธ์
+            </h2>
+            <p class="text-xs text-gray-600 mt-1">ศึกษารายละเอียดและผังเส้นสัมผัสบังคับของคำประพันธ์ทั้ง 5 บท ก่อนเริ่มต้นทำข้อสอบสะสมชิ้นส่วนศิลา</p>
+          </div>
+
+          <button 
+            onclick="switchScreen('game')" 
+            class="w-full md:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+            เริ่มต้นผจญภัยเล่นเกม <i class="fas fa-play"></i>
+          </button>
+        </div>
+
+        <!-- Knowledge Tabs & Content Display -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <!-- Sidebar Tabs -->
+          <div id="knowledgeTabs" class="flex flex-col gap-2 md:col-span-1">
+            <!-- Tabs rendered dynamically by app.js -->
+          </div>
+
+          <!-- Main Content Area -->
+          <div id="knowledgeContentDisplay" class="md:col-span-3 bg-amber-50/50 p-6 rounded-2xl border border-amber-200 min-h-[380px]">
+            <!-- Content rendered dynamically by app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SCREEN: Game Play Engine (ด่าน 1 - 4 & Stage Selection Hub) -->
+    <section id="gameScreen" class="hidden py-2">
+      <!-- Stage Selection Hub & Overall Progress -->
+      <div id="stageSelectionHub"></div>
+
+      <!-- Game Top Status Bar (แสดงเมื่อกดเข้าเล่นด่านนั้นๆ) -->
+      <div id="gameTopStatusBar" class="hidden bg-white/90 backdrop-blur-xl rounded-2xl p-4 border border-amber-300 shadow-lg max-w-5xl mx-auto mb-6 flex flex-wrap justify-between items-center gap-3">
+        <div class="flex items-center gap-3">
+          <button 
+            onclick="renderStageSelectionHub()" 
+            class="bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+            <i class="fas fa-map text-amber-600"></i> แผนที่ด่าน
+          </button>
+          <div>
+            <h2 id="gameStageTitle" class="text-base md:text-lg font-extrabold text-amber-950">
+              ด่านที่ 1: คลังปัญญาคำประพันธ์
+            </h2>
+            <div id="navTabletBadges" class="flex gap-1.5 mt-0.5">
+              <!-- Badges rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="flex items-center gap-2 bg-amber-100 px-4 py-2 rounded-xl border border-amber-300 shadow-sm">
+          <i class="fas fa-clock text-amber-600 text-lg animate-pulse"></i>
+          <span class="text-xs font-bold text-amber-900">เวลาที่เหลือ:</span>
+          <span id="gameTimerDisplay" class="font-mono font-extrabold text-amber-950 text-lg">07:00</span>
+        </div>
+      </div>
+
+      <!-- Stage Containers (1-4) -->
+      <div id="stage1Container" class="hidden"></div>
+      <div id="stage2Container" class="hidden"></div>
+      <div id="stage3Container" class="hidden"></div>
+      <div id="stage4Container" class="hidden"></div>
+    </section>
+
+    <!-- 4. SCREEN: Dashboard (Leaderboard & Student Summary) -->
+    <section id="dashboardScreen" class="hidden py-4">
+      <div id="dashboardContent"></div>
+    </section>
+
+    <!-- 5. SCREEN: Admin Backend ( Password nwsp1234 ) -->
+    <section id="adminScreen" class="hidden py-4">
+      <div id="adminContainer"></div>
+    </section>
+
+    <!-- 6. SCREEN: Rest Cooldown (พักรอหัวใจ 10 วินาที หัก -500 คะแนน) -->
+    <section id="restScreen" class="hidden py-8">
+      <div class="bg-white/95 backdrop-blur-xl rounded-3xl p-8 max-w-2xl mx-auto text-center shadow-2xl border-4 border-red-400 text-slate-900 animate-scale-up">
+        <div class="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 animate-bounce">
+          💔
+        </div>
+
+        <h2 class="text-2xl md:text-3xl font-black text-red-950 mb-2">หัวใจของคุณหมดลงแล้ว!</h2>
+        <p class="text-sm text-gray-600 mb-4">
+          เนื่องจากหัวใจลดลงจนเหลือ 0 ดวง ระบบจะหักคะแนนรวม <span class="font-bold text-red-600">-500 คะแนน</span> และให้นักเรียนพักทบทวนความรู้เป็นเวลา <span class="font-bold text-red-600">10 วินาที</span> เพื่อรับหัวใจคืน 10 ดวง
+        </p>
+
+        <!-- Rest Timer Counter -->
+        <div class="bg-red-50 p-6 rounded-2xl border border-red-200 max-w-sm mx-auto mb-6">
+          <span class="text-xs font-bold text-red-700 uppercase tracking-wider block mb-1">เวลานับถอยหลังพักรอหัวใจ:</span>
+          <span id="restTimerText" class="text-5xl font-black text-red-600 font-mono">10</span>
+          <span class="text-xs font-bold text-red-700 block mt-1">วินาที</span>
+        </div>
+
+        <div class="text-left bg-amber-50 p-5 rounded-2xl border border-amber-200">
+          <h4 class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <i class="fas fa-lightbulb text-amber-500"></i> ทบทวนความรู้สั้นๆ ระหว่างรอ:
+          </h4>
+          <ul class="text-xs text-amber-950 space-y-1.5 list-disc list-inside">
+            <li><strong>สัมผัสสระ:</strong> ใช้สระและมาตราตัวสะกดเดียวกัน</li>
+            <li><strong>กาพย์ยานี 11:</strong> "วรรคหน้ามีห้าคำ วรรคหลังจำไว้มีหก"</li>
+            <li><strong>โคลงสี่สุภาพ:</strong> บังคับ คำเอก 7 แห่ง คำโท 4 แห่ง</li>
+            <li><strong>กลอนแปด:</strong> 4 วรรคคือ สดับ - รับ - รอง - ส่ง (วรรครับห้ามสามัญและตรี)</li>
+            <li><strong>ฉันท์:</strong> ครุ (หนัก = สระยาว/มีตัวสะกด), ลหุ (เบา = สระสั้น/ไม่มีตัวสะกด)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Knowledge Popup Helper (เปิดได้ตลอดเวลา -100 คะแนน) -->
+  <div id="knowledgeModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border-4 border-amber-400 text-slate-900 animate-scale-up">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-5 border-b border-amber-200 bg-amber-100 rounded-t-3xl">
+        <h3 class="text-lg font-black text-amber-950 flex items-center gap-2">
+          <i class="fas fa-lightbulb text-amber-500 text-xl"></i> คลังความรู้ทบทวนในเกม (เปิดแล้วหัก -100 คะแนน)
+        </h3>
+        <button onclick="closeKnowledgePopup()" class="w-10 h-10 rounded-xl bg-amber-200 hover:bg-amber-300 text-amber-950 font-bold flex items-center justify-center transition-all cursor-pointer">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Content -->
+      <div id="knowledgeModalBody" class="p-6 overflow-y-auto flex-1 space-y-6 text-sm"></div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-amber-200 bg-amber-50 rounded-b-3xl text-right">
+        <button 
+          onclick="closeKnowledgePopup()" 
+          class="bg-amber-600 hover:bg-amber-700 text-white font-extrabold px-6 py-2.5 rounded-xl shadow-md transition-all cursor-pointer">
+          ปิดคลังความรู้เพื่อทำข้อสอบต่อ <i class="fas fa-check ml-1"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- App Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/stage1.js"></script>
+  <script src="js/stage2.js"></script>
+  <script src="js/stage3.js"></script>
+  <script src="js/stage4.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
