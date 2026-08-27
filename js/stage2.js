@@ -1,12 +1,12 @@
 /**
- * stage2.js - ระบบการเล่นด่านที่ 2 (ปรับปรุง 2-Mistake Skip Rule, ป้องกันเส้นทับซ้อน, และซ่อนข้อความเฉลยเมื่อตอบผิด)
+ * stage2.js - ระบบการเล่นด่านที่ 2 (จัดพิกัดการโยงเส้นฉาก อินทรวิเชียรฉันท์ 11 และการข้ามข้อหลังผิด 2 ครั้ง)
  */
 
 let stage2CurrentIndex = 0;
 let stage2Score = 0;
 let stage2Connections = [];
 let stage2SelectedNode = null;
-let stage2TaskWrongAttempts = 0; // นับจำนวนครั้งที่ตอบผิดในข้อปัจจุบัน
+let stage2TaskWrongAttempts = 0;
 
 function initStage2() {
   stage2CurrentIndex = 0;
@@ -36,7 +36,7 @@ function renderStage2Task(isReadOnly = false) {
   }
 
   const diagram = STAGE2_DIAGRAMS[stage2CurrentIndex] || STAGE2_DIAGRAMS[0];
-  stage2TaskWrongAttempts = 0; // รีเซ็ตจำนวนครั้งที่ตอบผิดเมื่อเริ่มข้อใหม่
+  stage2TaskWrongAttempts = 0;
   
   if (isReadOnly) {
     stage2Connections = diagram.correctConnections.map(req => {
@@ -254,6 +254,7 @@ function redrawStage2Lines() {
 
   const currentDiagram = STAGE2_DIAGRAMS[stage2CurrentIndex] || STAGE2_DIAGRAMS[0];
   const isKhlong = currentDiagram.id === "khlong_4";
+  const isInthanawichian = currentDiagram.id === "inthanawichian_11";
 
   linesGroup.innerHTML = stage2Connections.map(c => {
     const x1 = c.fromCx;
@@ -268,33 +269,40 @@ function redrawStage2Lines() {
       const rightX = Math.max(x1, x2) + 20;
       pathData = `M ${x1} ${y1} H ${rightX} V ${y2} H ${x2}`;
     }
-    // 2. ป้องกันเส้นทับซ้อนสำหรับ โคลงสี่สุภาพ
+    // 2. โคลงสี่สุภาพ ➔ เส้นทางหลบทับซ้อน
     else if (isKhlong) {
-      // บาท 1 คำ 7 (318, 35) -> บาท 2 คำ 5 (132, 85)
       if ((c.fromId === "k1_7" && c.toId === "k2_5") || (c.toId === "k1_7" && c.fromId === "k2_5")) {
         pathData = `M ${x1} ${y1} V 58 H ${x2} V ${y2}`;
-      }
-      // บาท 1 คำ 7 (318, 35) -> บาท 3 คำ 5 (160, 135)
-      else if ((c.fromId === "k1_7" && c.toId === "k3_5") || (c.toId === "k1_7" && c.fromId === "k3_5")) {
+      } else if ((c.fromId === "k1_7" && c.toId === "k3_5") || (c.toId === "k1_7" && c.fromId === "k3_5")) {
         pathData = `M ${x1} ${y1} H 338 V 135 H ${x2}`;
-      }
-      // บาท 2 คำ 7 (318, 85) -> บาท 4 คำ 5 (132, 185)
-      else if ((c.fromId === "k2_7" && c.toId === "k4_5") || (c.toId === "k2_7" && c.fromId === "k4_5")) {
+      } else if ((c.fromId === "k2_7" && c.toId === "k4_5") || (c.toId === "k2_7" && c.fromId === "k4_5")) {
         pathData = `M ${x1} ${y1} V 110 H ${x2} V ${y2}`;
-      }
-      else if (Math.abs(y1 - y2) < 10) {
+      } else if (Math.abs(y1 - y2) < 10) {
         pathData = `M ${x1} ${y1} V ${y1 - 15} H ${x2} V ${y2}`;
       } else {
         const midY = (y1 + y2) / 2;
         pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
       }
     }
-    // 3. สัมผัสบรรทัดเดียวกัน (Intra-row) ➔ โค้งขึ้นด้านบน
+    // 3. อินทรวิเชียรฉันท์ 11 ➔ เส้นทางหลบทับซ้อนตรงตามรูปเลเอาต์ 100%
+    else if (isInthanawichian) {
+      // สัมผัสข้ามวรรคในบท (i1_11 ➔ i2_5 หรือ i3_11 ➔ i4_5)
+      if (Math.abs(y1 - y2) > 10) {
+        const midY = (y1 + y2) / 2;
+        pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
+      } 
+      // สัมผัสในวรรค (i1_5 ➔ i1_8 หรือ i3_5 ➔ i3_8)
+      else {
+        const midY = y1 - 15;
+        pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
+      }
+    }
+    // 4. สัมผัสบรรทัดเดียวกัน (Intra-row) ➔ โค้งขึ้นด้านบน
     else if (Math.abs(y1 - y2) < 10) {
       const midY = y1 - 15;
       pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
     } 
-    // 4. สัมผัสข้ามบรรทัดปกติ ➔ วิ่งตรงฉากผ่านช่องว่างกลางระหว่างบรรทัด (y1+y2)/2 !
+    // 5. สัมผัสข้ามบรรทัดปกติ ➔ วิ่งตรงฉากผ่านช่องว่างกลางระหว่างบรรทัด (y1+y2)/2 !
     else {
       const midY = (y1 + y2) / 2;
       pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
@@ -367,9 +375,9 @@ function evaluateStage2Connections(diagramId, connections) {
   if (diagramId === "inthanawichian_11") {
     if (!hasLine(["i1_5"], ["i1_8"])) missingCount++;
     if (!hasLine(["i1_11"], ["i2_5"])) missingCount++;
-    if (!hasLine(["i2_11"], ["i3_11"])) missingCount++;
+    if (!hasLine(["i2_11"], ["i3_11", "i3_5"])) missingCount++;
     if (!hasLine(["i3_5"], ["i3_8"])) missingCount++;
-    if (!hasLine(["i3_11"], ["i4_5"])) missingList.push("คำท้ายวรรค 6 ➔ คำท้ายวรรค 7");
+    if (!hasLine(["i3_11"], ["i4_5"])) missingCount++;
     return { isCorrect: missingCount === 0 };
   }
 

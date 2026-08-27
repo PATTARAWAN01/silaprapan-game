@@ -1,5 +1,5 @@
 /**
- * data.js - คลังข้อมูลเนื้อหาการเรียนรู้ ข้อสอบ และผังฉันทลักษณ์ (อัปเดตตำแหน่ง เอก โท และการโยงเส้นฉาก โคลงสี่สุภาพ 100%)
+ * data.js - คลังข้อมูลเนื้อหาการเรียนรู้ ข้อสอบ และผังฉันทลักษณ์ (อัปเดตเลเอาต์อินทรวิเชียรฉันท์ 11 ตรงตามต้นฉบับฝั่งซ้าย 100%)
  */
 
 const KNOWLEDGE_DATA = [
@@ -305,7 +305,7 @@ const STAGE1_QUESTIONS = [
       "คำกับวรรค",
       "วรรคกับบาท",
       "บาทกับบท",
-      "คณะกับสัมผัส"
+      "คณะและสัมผัส"
     ],
     answer: 1,
     explanation: "ข้อความแสดงความสัมพันธ์ระหว่าง วรรคกับบาท"
@@ -324,12 +324,12 @@ const STAGE1_QUESTIONS = [
   }
 ];
 
-// ข้อสอบด่าน 2 (โคลงสี่สุภาพ 1 บท 4 บาท ตรงตามต้นฉบับฝั่งซ้าย 100%)
+// ข้อสอบด่าน 2 (ย่อหน้าและการจัดเรียงตรงตามผังต้นฉบับ 100%)
 const STAGE2_DIAGRAMS = [
   {
     id: "kap_11",
-    title: "ข้อที่ 1: กาพย์ยานี 11 (จำนวน 2 บท - ตรงตามต้นฉบับ 100%)",
-    subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับของ กาพย์ยานี 11 (2 บท 8 วรรค 5 เส้นบังคับ) ให้ถูกต้องตามผัง",
+    title: "ข้อที่ 1: กาพย์ยานี 11",
+    subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับของ กาพย์ยานี 11 ให้ถูกต้องตามผัง",
     type: "กาพย์ยานี 11",
     syllables: [
       // บทที่ 1 บาทที่ 1 (วรรค 1: 5 คำ, วรรค 2: 6 คำ)
@@ -398,7 +398,7 @@ const STAGE2_DIAGRAMS = [
   },
   {
     id: "khlong_4",
-    title: "ข้อที่ 2: โคลงสี่สุภาพ (จำนวน 1 บท 4 บาท - ตรงตามต้นฉบับ 100%)",
+    title: "ข้อที่ 2: โคลงสี่สุภาพ",
     subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับของ โคลงสี่สุภาพ (สังเกตตำแหน่ง เอก โท และคำสร้อยในวงเล็บ)",
     type: "โคลงสี่สุภาพ",
     hasParentheses: true,
@@ -453,8 +453,8 @@ const STAGE2_DIAGRAMS = [
   },
   {
     id: "klon_8",
-    title: "ข้อที่ 3: กลอนแปด (จำนวน 2 บท - ย่อหน้าบรรทัดตรงตามต้นฉบับ 100%)",
-    subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับของ กลอนแปด (2 บท 8 วรรค) ให้ถูกต้องตามผัง",
+    title: "ข้อที่ 3: กลอนแปด",
+    subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับของ กลอนแปด ให้ถูกต้องตามผัง",
     type: "กลอนแปด",
     syllables: [
       // บทที่ 1 วรรค 1 (8 คำ - ย่อหน้าเริ่มที่ x=48)
@@ -538,15 +538,10 @@ const STAGE2_DIAGRAMS = [
       { id: "g8_8", text: "", x: 496, y: 180, lahokhu: "normal" }
     ],
     correctConnections: [
-      // บทที่ 1
       { from: "g1_8", to: "g2_3", altTo: ["g2_3", "g2_5"] },
       { from: "g2_8", to: "g3_8" },
       { from: "g3_8", to: "g4_3", altTo: ["g4_3", "g4_5"] },
-      
-      // สัมผัสระหว่างบท (บท 1 วรรคส่งคำ 8 ➔ บท 2 วรรครับคำ 8)
       { from: "g4_8", to: "g6_8", altTo: ["g4_8", "g6_8", "g5_8"], isInterStanza: true },
-
-      // บทที่ 2
       { from: "g5_8", to: "g6_3", altTo: ["g6_3", "g6_5"] },
       { from: "g6_8", to: "g7_8" },
       { from: "g7_8", to: "g8_3", altTo: ["g8_3", "g8_5"] }
@@ -554,63 +549,65 @@ const STAGE2_DIAGRAMS = [
   },
   {
     id: "inthanawichian_11",
-    title: "ข้อที่ 4: อินทรวิเชียรฉันท์ 11 (จำนวน 2 บท - ตรงตามต้นฉบับ 100%)",
-    subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับ อินทรวิเชียรฉันท์ 11 (2 บท 8 วรรค) ให้ถูกต้องตามผัง",
+    title: "ข้อที่ 4: อินทรวิเชียรฉันท์ 11",
+    subtitle: "ลากเส้นตรงฉากเชื่อมจุดสัมผัสบังคับ อินทรวิเชียรฉันท์ 11 ให้ถูกต้องตามผัง",
     type: "อินทรวิเชียรฉันท์ 11",
     syllables: [
-      // บทที่ 1 (บาท 1 และ บาท 2)
-      { id: "i1_1", text: "", x: 40, y: 30, lahokhu: "kru" },
-      { id: "i1_2", text: "", x: 80, y: 30, lahokhu: "kru" },
-      { id: "i1_3", text: "", x: 120, y: 30, lahokhu: "lahu" },
-      { id: "i1_4", text: "", x: 160, y: 30, lahokhu: "kru" },
-      { id: "i1_5", text: "", x: 200, y: 30, lahokhu: "kru_target" },
+      // บทที่ 1 บาทที่ 1 (ย่อหน้าเริ่ม x=132 ตรงตามรูปภาพต้นฉบับ 100%)
+      { id: "i1_1", text: "", x: 132, y: 30, lahokhu: "kru" },
+      { id: "i1_2", text: "", x: 160, y: 30, lahokhu: "kru" },
+      { id: "i1_3", text: "", x: 188, y: 30, lahokhu: "lahu" },
+      { id: "i1_4", text: "", x: 216, y: 30, lahokhu: "kru" },
+      { id: "i1_5", text: "", x: 244, y: 30, lahokhu: "kru_target" },
 
-      { id: "i1_6", text: "", x: 250, y: 30, lahokhu: "lahu" },
-      { id: "i1_7", text: "", x: 290, y: 30, lahokhu: "kru" },
-      { id: "i1_8", text: "", x: 330, y: 30, lahokhu: "lahu_target" },
-      { id: "i1_9", text: "", x: 370, y: 30, lahokhu: "lahu" },
-      { id: "i1_10", text: "", x: 410, y: 30, lahokhu: "kru" },
-      { id: "i1_11", text: "", x: 450, y: 30, lahokhu: "kru_target" },
+      { id: "i1_6", text: "", x: 290, y: 30, lahokhu: "lahu" },
+      { id: "i1_7", text: "", x: 318, y: 30, lahokhu: "kru" },
+      { id: "i1_8", text: "", x: 346, y: 30, lahokhu: "lahu_target" },
+      { id: "i1_9", text: "", x: 374, y: 30, lahokhu: "lahu" },
+      { id: "i1_10", text: "", x: 402, y: 30, lahokhu: "kru" },
+      { id: "i1_11", text: "", x: 430, y: 30, lahokhu: "kru_target" },
 
-      { id: "i2_1", text: "", x: 40, y: 80, lahokhu: "kru" },
-      { id: "i2_2", text: "", x: 80, y: 80, lahokhu: "kru" },
-      { id: "i2_3", text: "", x: 120, y: 80, lahokhu: "lahu" },
-      { id: "i2_4", text: "", x: 160, y: 80, lahokhu: "kru" },
-      { id: "i2_5", text: "", x: 200, y: 80, lahokhu: "kru_target" },
+      // บทที่ 1 บาทที่ 2 (เริ่มต้นชิดซ้าย x=48)
+      { id: "i2_1", text: "", x: 48, y: 80, lahokhu: "kru" },
+      { id: "i2_2", text: "", x: 76, y: 80, lahokhu: "kru" },
+      { id: "i2_3", text: "", x: 104, y: 80, lahokhu: "lahu" },
+      { id: "i2_4", text: "", x: 132, y: 80, lahokhu: "kru" },
+      { id: "i2_5", text: "", x: 160, y: 80, lahokhu: "kru_target" },
 
-      { id: "i2_6", text: "", x: 250, y: 80, lahokhu: "lahu" },
-      { id: "i2_7", text: "", x: 290, y: 80, lahokhu: "kru" },
-      { id: "i2_8", text: "", x: 330, y: 80, lahokhu: "lahu" },
-      { id: "i2_9", text: "", x: 370, y: 80, lahokhu: "lahu" },
-      { id: "i2_10", text: "", x: 410, y: 80, lahokhu: "kru" },
-      { id: "i2_11", text: "", x: 450, y: 80, lahokhu: "kru_target" },
+      { id: "i2_6", text: "", x: 290, y: 80, lahokhu: "lahu" },
+      { id: "i2_7", text: "", x: 318, y: 80, lahokhu: "kru" },
+      { id: "i2_8", text: "", x: 346, y: 80, lahokhu: "lahu" },
+      { id: "i2_9", text: "", x: 374, y: 80, lahokhu: "lahu" },
+      { id: "i2_10", text: "", x: 402, y: 80, lahokhu: "kru" },
+      { id: "i2_11", text: "", x: 430, y: 80, lahokhu: "kru_target" },
 
-      // บทที่ 2 (บาท 3 และ บาท 4)
-      { id: "i3_1", text: "", x: 40, y: 130, lahokhu: "kru" },
-      { id: "i3_2", text: "", x: 80, y: 130, lahokhu: "kru" },
-      { id: "i3_3", text: "", x: 120, y: 130, lahokhu: "lahu" },
-      { id: "i3_4", text: "", x: 160, y: 130, lahokhu: "kru" },
-      { id: "i3_5", text: "", x: 200, y: 130, lahokhu: "kru_target" },
+      // บทที่ 2 บาทที่ 1 (ย่อหน้าเริ่ม x=132 ตรงตามรูปภาพต้นฉบับ 100%)
+      { id: "i3_1", text: "", x: 132, y: 130, lahokhu: "kru" },
+      { id: "i3_2", text: "", x: 160, y: 130, lahokhu: "kru" },
+      { id: "i3_3", text: "", x: 188, y: 130, lahokhu: "lahu" },
+      { id: "i3_4", text: "", x: 216, y: 130, lahokhu: "kru" },
+      { id: "i3_5", text: "", x: 244, y: 130, lahokhu: "kru_target" },
 
-      { id: "i3_6", text: "", x: 250, y: 130, lahokhu: "lahu" },
-      { id: "i3_7", text: "", x: 290, y: 130, lahokhu: "kru" },
-      { id: "i3_8", text: "", x: 330, y: 130, lahokhu: "lahu_target" },
-      { id: "i3_9", text: "", x: 370, y: 130, lahokhu: "lahu" },
-      { id: "i3_10", text: "", x: 410, y: 130, lahokhu: "kru" },
-      { id: "i3_11", text: "", x: 450, y: 130, lahokhu: "kru_target" },
+      { id: "i3_6", text: "", x: 290, y: 130, lahokhu: "lahu" },
+      { id: "i3_7", text: "", x: 318, y: 130, lahokhu: "kru" },
+      { id: "i3_8", text: "", x: 346, y: 130, lahokhu: "lahu_target" },
+      { id: "i3_9", text: "", x: 374, y: 130, lahokhu: "lahu" },
+      { id: "i3_10", text: "", x: 402, y: 130, lahokhu: "kru" },
+      { id: "i3_11", text: "", x: 430, y: 130, lahokhu: "kru_target" },
 
-      { id: "i4_1", text: "", x: 40, y: 180, lahokhu: "kru" },
-      { id: "i4_2", text: "", x: 80, y: 180, lahokhu: "kru" },
-      { id: "i4_3", text: "", x: 120, y: 180, lahokhu: "lahu" },
-      { id: "i4_4", text: "", x: 160, y: 180, lahokhu: "kru" },
-      { id: "i4_5", text: "", x: 200, y: 180, lahokhu: "kru_target" },
+      // บทที่ 2 บาทที่ 2 (เริ่มต้นชิดซ้าย x=48)
+      { id: "i4_1", text: "", x: 48, y: 180, lahokhu: "kru" },
+      { id: "i4_2", text: "", x: 76, y: 180, lahokhu: "kru" },
+      { id: "i4_3", text: "", x: 104, y: 180, lahokhu: "lahu" },
+      { id: "i4_4", text: "", x: 132, y: 180, lahokhu: "kru" },
+      { id: "i4_5", text: "", x: 160, y: 180, lahokhu: "kru_target" },
 
-      { id: "i4_6", text: "", x: 250, y: 180, lahokhu: "lahu" },
-      { id: "i4_7", text: "", x: 290, y: 180, lahokhu: "kru" },
-      { id: "i4_8", text: "", x: 330, y: 180, lahokhu: "lahu" },
-      { id: "i4_9", text: "", x: 370, y: 180, lahokhu: "lahu" },
-      { id: "i4_10", text: "", x: 410, y: 180, lahokhu: "kru" },
-      { id: "i4_11", text: "", x: 450, y: 180, lahokhu: "kru" }
+      { id: "i4_6", text: "", x: 290, y: 180, lahokhu: "lahu" },
+      { id: "i4_7", text: "", x: 318, y: 180, lahokhu: "kru" },
+      { id: "i4_8", text: "", x: 346, y: 180, lahokhu: "lahu" },
+      { id: "i4_9", text: "", x: 374, y: 180, lahokhu: "lahu" },
+      { id: "i4_10", text: "", x: 402, y: 180, lahokhu: "kru" },
+      { id: "i4_11", text: "", x: 430, y: 180, lahokhu: "kru" }
     ],
     correctConnections: [
       // บทที่ 1
@@ -631,7 +628,7 @@ const STAGE3_REORDER_TASKS = [
   {
     id: 1,
     type: "กาพย์ยานี 11",
-    title: "ข้อที่ 1: กาพย์ยานี 11 (เรื่องเสน่ห์อาหารไทย 2 บท)",
+    title: "ข้อที่ 1: กาพย์ยานี 11 (เรื่องเสน่ห์อาหารไทย)",
     unitName: "วรรค",
     shuffledLines: [
       { id: "line_1_4", text: "เมื่อลิ้มลองจะติดใจ" },
@@ -651,7 +648,7 @@ const STAGE3_REORDER_TASKS = [
   {
     id: 2,
     type: "กลอนแปด",
-    title: "ข้อที่ 2: กลอนแปด (เรื่องเกิดเป็นคนดิ้นรนสู้ชีวิต 2 บท)",
+    title: "ข้อที่ 2: กลอนแปด (เรื่องเกิดเป็นคนดิ้นรนสู้ชีวิต)",
     unitName: "วรรค",
     shuffledLines: [
       { id: "line_2_4", text: "แต่สังขารไม่อยู่อย่างยั่งยืน" },
@@ -671,7 +668,7 @@ const STAGE3_REORDER_TASKS = [
   {
     id: 3,
     type: "โคลงสี่สุภาพ",
-    title: "ข้อที่ 3: โคลงสี่สุภาพ (ห้ามเพลิงไว้อย่าให้มีควัน - แยก 8 วรรค)",
+    title: "ข้อที่ 3: โคลงสี่สุภาพ (ห้ามเพลิงไว้อย่าให้มีควัน)",
     unitName: "วรรค",
     shuffledLines: [
       { id: "line_3_4", text: "ส่องไซร้" },
@@ -691,7 +688,7 @@ const STAGE3_REORDER_TASKS = [
   {
     id: 4,
     type: "อินทรวิเชียรฉันท์ 11",
-    title: "ข้อที่ 4: อินทรวิเชียรฉันท์ 11 (พึงมรรยาทยึด - แยก 8 วรรค)",
+    title: "ข้อที่ 4: อินทรวิเชียรฉันท์ 11 (พึงมรรยาทยึด)",
     unitName: "วรรค",
     shuffledLines: [
       { id: "line_4_4", text: "อุปเฉทไมตรี" },
@@ -719,8 +716,8 @@ const STAGE4_TOPICS = [
 ];
 
 const STAGE4_VERSE_TYPES = [
-  "กาพย์ยานี 11 (จำนวน 2 บท)",
-  "กลอนแปด / กลอนสุภาพ (จำนวน 2 บท)",
-  "โคลงสี่สุภาพ (จำนวน 1 บท)",
-  "อินทรวิเชียรฉันท์ 11 (จำนวน 1 บท)"
+  "กาพย์ยานี 11",
+  "กลอนแปด / กลอนสุภาพ",
+  "โคลงสี่สุภาพ",
+  "อินทรวิเชียรฉันท์ 11"
 ];
