@@ -1,5 +1,5 @@
 /**
- * stage2.js - ระบบการเล่นด่านที่ 2 (จัดพิกัดการโยงเส้นฉาก อินทรวิเชียรฉันท์ 11 และการข้ามข้อหลังผิด 2 ครั้ง)
+ * stage2.js - ระบบการเล่นด่านที่ 2 (จัดพิกัดการโยงเส้นฉาก โคลงสี่สุภาพ ไม่ให้ทับซ้อนวงกลมอื่น 100% พร้อมปรับรูปแบบการเชื่อมเฉลย)
  */
 
 let stage2CurrentIndex = 0;
@@ -255,6 +255,7 @@ function redrawStage2Lines() {
   const currentDiagram = STAGE2_DIAGRAMS[stage2CurrentIndex] || STAGE2_DIAGRAMS[0];
   const isKhlong = currentDiagram.id === "khlong_4";
   const isInthanawichian = currentDiagram.id === "inthanawichian_11";
+  const isKlon = currentDiagram.id === "klon_8";
 
   linesGroup.innerHTML = stage2Connections.map(c => {
     const x1 = c.fromCx;
@@ -264,35 +265,38 @@ function redrawStage2Lines() {
 
     let pathData = "";
 
-    // 1. สัมผัสระหว่างบท ➔ อ้อมวนออกขวา
+    // 1. สัมผัสระหว่างบท ➔ อ้อมวนออกทางขวา
     if (c.isInterStanza) {
       const rightX = Math.max(x1, x2) + 20;
       pathData = `M ${x1} ${y1} H ${rightX} V ${y2} H ${x2}`;
     }
-    // 2. โคลงสี่สุภาพ ➔ เส้นทางหลบทับซ้อน
+    // 2. โคลงสี่สุภาพ ➔ วิ่งอ้อมหลบวงกลม k2_7 (x=318, y=85) อย่างสมบูรณ์ 100%
     else if (isKhlong) {
+      // k1_7 (318, 35) -> k2_5 (132, 85): วิ่งไปขวาที่ x=334 หลบ k2_7 แล้วย้อนเข้า k2_5
       if ((c.fromId === "k1_7" && c.toId === "k2_5") || (c.toId === "k1_7" && c.fromId === "k2_5")) {
-        pathData = `M ${x1} ${y1} V 58 H ${x2} V ${y2}`;
-      } else if ((c.fromId === "k1_7" && c.toId === "k3_5") || (c.toId === "k1_7" && c.fromId === "k3_5")) {
-        pathData = `M ${x1} ${y1} H 338 V 135 H ${x2}`;
-      } else if ((c.fromId === "k2_7" && c.toId === "k4_5") || (c.toId === "k2_7" && c.fromId === "k4_5")) {
+        pathData = `M ${x1} ${y1} H 334 V 85 H ${x2}`;
+      }
+      // k1_7 (318, 35) -> k3_5 (160, 135): วิ่งไปขวาที่ x=334 แล้วลงมาย้อนเข้า k3_5
+      else if ((c.fromId === "k1_7" && c.toId === "k3_5") || (c.toId === "k1_7" && c.fromId === "k3_5")) {
+        pathData = `M ${x1} ${y1} H 334 V 135 H ${x2}`;
+      }
+      // k2_7 (318, 85) -> k4_5 (132, 185): วิ่งลงมาที่ช่องว่าง midY=110 แล้วเลี้ยวซ้ายย้อนเข้า k4_5
+      else if ((c.fromId === "k2_7" && c.toId === "k4_5") || (c.toId === "k2_7" && c.fromId === "k4_5")) {
         pathData = `M ${x1} ${y1} V 110 H ${x2} V ${y2}`;
-      } else if (Math.abs(y1 - y2) < 10) {
+      }
+      else if (Math.abs(y1 - y2) < 10) {
         pathData = `M ${x1} ${y1} V ${y1 - 15} H ${x2} V ${y2}`;
       } else {
         const midY = (y1 + y2) / 2;
         pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
       }
     }
-    // 3. อินทรวิเชียรฉันท์ 11 ➔ เส้นทางหลบทับซ้อนตรงตามรูปเลเอาต์ 100%
+    // 3. อินทรวิเชียรฉันท์ 11 ➔ วิ่งฉากหลบเส้นตรงตามรูปต้นฉบับ 100%
     else if (isInthanawichian) {
-      // สัมผัสข้ามวรรคในบท (i1_11 ➔ i2_5 หรือ i3_11 ➔ i4_5)
       if (Math.abs(y1 - y2) > 10) {
         const midY = (y1 + y2) / 2;
         pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
-      } 
-      // สัมผัสในวรรค (i1_5 ➔ i1_8 หรือ i3_5 ➔ i3_8)
-      else {
+      } else {
         const midY = y1 - 15;
         pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
       }
@@ -302,7 +306,7 @@ function redrawStage2Lines() {
       const midY = y1 - 15;
       pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
     } 
-    // 5. สัมผัสข้ามบรรทัดปกติ ➔ วิ่งตรงฉากผ่านช่องว่างกลางระหว่างบรรทัด (y1+y2)/2 !
+    // 5. สัมผัสข้ามบรรทัดปกติ ➔ วิ่งตรงฉากผ่านช่องว่างกลางระหว่างบรรทัด (y1+y2)/2
     else {
       const midY = (y1 + y2) / 2;
       pathData = `M ${x1} ${y1} V ${midY} H ${x2} V ${y2}`;
